@@ -1,0 +1,17 @@
+# Virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Data files
+*.xlsx
+
+# Outputs
+predictions.csv
+predictions.xlsx
+
+# OS files
+.DS_Store
+Thumbs.db
