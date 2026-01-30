@@ -1,10 +1,10 @@
 # Aerodynamic Coefficient Predictor
 
 MLP-based machine learning tool for predicting:
-- Cl
-- Cd
-- Cdp
-- Cm
+- Cl (Lift Coefficient)
+- Cd (Drag Coefficient)
+- Cdp (Profile Drag Coefficient)
+- Cm (Pitching Moment Coefficient)
 
 ## Features
 - Python + TensorFlow MLP model
