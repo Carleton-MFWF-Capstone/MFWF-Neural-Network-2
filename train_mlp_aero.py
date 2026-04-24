@@ -25,6 +25,8 @@ import argparse            # Handles command-line arguments (so you can change s
 import joblib              # Used to save and load Python objects (like scalers and encoders) to disk.
 import numpy as np         # Fundamental library for numerical computations and arrays.
 import pandas as pd        # Library for working with tabular data (like Excel spreadsheets).
+import matplotlib          # Allows selecting a plotting backend before importing pyplot.
+matplotlib.use("Agg")      # Save plots to files without requiring a GUI backend.
 import matplotlib.pyplot as plt  # Library for plotting graphs and figures.
 
 # Import specific tools from scikit-learn:
@@ -535,9 +537,9 @@ def main():
 
     print("=== Adequacy verdict ===")
     if verdict["adequate"]:
-        print("✅ Model accuracy is ADEQUATE for the configured thresholds.")
+        print("[OK] Model accuracy is ADEQUATE for the configured thresholds.")
     else:
-        print("❌ Model accuracy is NOT adequate for the configured thresholds.")
+        print("[FAIL] Model accuracy is NOT adequate for the configured thresholds.")
         for line in verdict["fail_reasons"]:
             print(" ", line)
 

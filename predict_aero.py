@@ -1,6 +1,6 @@
 # predict_aero.py
 # Batch predictions for Cl, Cd, Cdp, Cm from an Excel file of new cases.
-# Uses artifacts saved by train_lstm_aero.py (model, scalers, encoder, meta).
+# Uses artifacts saved by the aero training script (model, scalers, encoder, meta).
 
 import argparse
 import json
@@ -32,15 +32,12 @@ def resolve_project_path(path_like):
 
 def load_artifacts(models_dir: Path):
     meta_path = models_dir / "meta.json"
-    model_path = models_dir / "aero_lstm.keras"
     x_scaler_path = models_dir / "x_scaler.pkl"
     y_scaler_path = models_dir / "y_scaler.pkl"
     ohe_path = models_dir / "airfoil_encoder.pkl"
 
     if not meta_path.exists():
         sys.exit(f"[ERROR] Missing {meta_path}. Train the model first.")
-    if not model_path.exists():
-        sys.exit(f"[ERROR] Missing {model_path}. Train the model first.")
     if not x_scaler_path.exists():
         sys.exit(f"[ERROR] Missing {x_scaler_path}.")
     if not y_scaler_path.exists():
@@ -51,12 +48,17 @@ def load_artifacts(models_dir: Path):
     with open(meta_path, "r") as f:
         meta = json.load(f)
 
-    model = keras.models.load_model(model_path)
+    model_type = meta.get("model_type", "mlp")
+    model_filename = "aero_lstm.keras" if model_type == "lstm" else "aero_mlp.keras"
+    model_path = models_dir / model_filename
+    if not model_path.exists():
+        sys.exit(f"[ERROR] Missing {model_path}. Train the model first.")
+
+    model = keras.models.load_model(model_path, compile=False)
     x_scaler = joblib.load(x_scaler_path)
     y_scaler = joblib.load(y_scaler_path)
     ohe = joblib.load(ohe_path)
 
-    model_type = meta.get("model_type", "mlp")
     num_features = meta.get("num_features", ["Re", "Alpha", "Top_Xtr", "Bot_Xtr"])
     targets = meta.get("targets", ["Cl", "Cd", "Cdp", "Cm"])
 
